@@ -1,0 +1,84 @@
+return {
+  {
+    "folke/snacks.nvim",
+    priority = 1000,
+    lazy = false,
+    opts = {
+      -- 启用的功能模块
+      bigfile = { enabled = true },      -- 大文件优化
+      notifier = { enabled = true },     -- 通知系统
+      quickfile = { enabled = true },    -- 快速文件打开
+      statuscolumn = { enabled = true }, -- 状态列
+      words = { enabled = true },        -- 高亮当前单词
+      styles = {
+        notification = {
+          wo = { wrap = true },          -- 通知自动换行
+        },
+      },
+    },
+
+    config = function(_, opts)
+      local snacks = require("snacks")
+      snacks.setup(opts)
+
+      -- 设置快捷键
+      vim.keymap.set("n", "<leader>un", function()
+        snacks.notifier.hide()
+      end, { desc = "隐藏所有通知" })
+
+      vim.keymap.set("n", "<leader>bd", function()
+        snacks.bufdelete()
+      end, { desc = "删除 Buffer" })
+
+      vim.keymap.set("n", "<leader>gg", function()
+        snacks.lazygit()
+      end, { desc = "打开 Lazygit" })
+
+      vim.keymap.set("n", "<leader>gb", function()
+        snacks.git.blame_line()
+      end, { desc = "Git Blame 当前行" })
+
+      vim.keymap.set("n", "<leader>gB", function()
+        snacks.gitbrowse()
+      end, { desc = "在浏览器中打开 Git 仓库" })
+
+      vim.keymap.set("n", "<leader>gf", function()
+        snacks.lazygit.log_file()
+      end, { desc = "查看文件的 Git 历史" })
+
+      vim.keymap.set("n", "<leader>gl", function()
+        snacks.lazygit.log()
+      end, { desc = "查看 Git 日志" })
+
+      vim.keymap.set("n", "<leader>cR", function()
+        snacks.rename()
+      end, { desc = "重命名文件" })
+
+      -- 创建一些自动命令
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "VeryLazy",
+        callback = function()
+          -- 创建一些快捷操作
+          _G.dd = function(...)
+            snacks.debug.inspect(...)
+          end
+          _G.bt = function(...)
+            snacks.debug.backtrace(...)
+          end
+          vim.print = _G.dd
+        end,
+      })
+    end,
+
+    keys = {
+      { "<leader>.", function() require("snacks").scratch() end, desc = "切换 Scratch Buffer" },
+      { "<leader>S", function() require("snacks").scratch.select() end, desc = "选择 Scratch Buffer" },
+      { "<leader>n", function() require("snacks").notifier.show_history() end, desc = "通知历史" },
+      { "<leader>cR", function() require("snacks").rename.rename_file() end, desc = "重命名文件" },
+      { "<leader>tt", function() require("snacks").terminal() end, desc = "切换终端", mode = { "n", "t" } },
+      { "<C-`>", function() require("snacks").terminal() end, desc = "切换终端 (Ctrl+`)", mode = { "n", "t" } },
+      { "]]", function() require("snacks").words.jump(vim.v.count1) end, desc = "跳转到下一个引用" },
+      { "[[", function() require("snacks").words.jump(-vim.v.count1) end, desc = "跳转到上一个引用" },
+    },
+  },
+}

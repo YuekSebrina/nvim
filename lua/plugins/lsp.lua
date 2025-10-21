@@ -55,10 +55,22 @@ return {
         cmd = {
           'clangd',
           '--background-index',
-          '--clang-tidy',
           '--header-insertion=iwyu',
           '--completion-style=detailed',
           '--query-driver=/usr/bin/g++,/usr/bin/gcc',
+          '--header-insertion-decorators=false',
+          '--pch-storage=memory',
+          '--all-scopes-completion',
+          '--cross-file-rename',
+          '--suggest-missing-includes',
+          '--fallback-style=Google',
+        },
+        init_options = {
+          clangdFileStatus = true,
+          usePlaceholders = true,
+          completeUnimported = true,
+          semanticHighlighting = true,
+          fallbackFlags = { '-std=c++17' },
         },
       })
 

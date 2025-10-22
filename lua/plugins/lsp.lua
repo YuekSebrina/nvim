@@ -49,7 +49,7 @@ return {
         capabilities = capabilities,
       })
 
-      -- 配置 C/C++ LSP
+      -- 配置 C/C++ LSP (支持 ESP-IDF)
       vim.lsp.config('clangd', {
         capabilities = capabilities,
         cmd = {
@@ -57,20 +57,13 @@ return {
           '--background-index',
           '--header-insertion=iwyu',
           '--completion-style=detailed',
-          '--query-driver=/usr/bin/g++,/usr/bin/gcc',
+          '--query-driver=/usr/bin/g++,/usr/bin/gcc,/home/ubuntu/.espressif/tools/*/esp-*/*/bin/*-gcc',
           '--header-insertion-decorators=false',
           '--pch-storage=memory',
           '--all-scopes-completion',
           '--cross-file-rename',
           '--suggest-missing-includes',
           '--fallback-style=Google',
-        },
-        init_options = {
-          clangdFileStatus = true,
-          usePlaceholders = true,
-          completeUnimported = true,
-          semanticHighlighting = true,
-          fallbackFlags = { '-std=c++17' },
         },
       })
 
